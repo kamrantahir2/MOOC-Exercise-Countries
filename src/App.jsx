@@ -2,6 +2,36 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 
+const DisplayCountries = ({ countriesToShow, search }) => {
+  console.log("countriesToShow: ", countriesToShow());
+
+  if (search === "") {
+    return (
+      <div>
+        {countriesToShow(search).map((country) => {
+          return <li key={country.name.common}>{country.name.common}</li>;
+        })}
+      </div>
+    );
+  } else {
+    if (countriesToShow(search).length > 10) {
+      return (
+        <div>
+          <p>Too many matches, try a more specific search</p>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        {countriesToShow().map((country) => {
+          return <li key={country.name.common}>{country.name.common}</li>;
+        })}
+      </div>
+    );
+  }
+};
+
 function App() {
   const [countries, setCountries] = useState(null);
   const [search, setSearch] = useState("");
@@ -19,12 +49,12 @@ function App() {
     return null;
   }
 
-  const countriesToShow = () => {
-    if (search === "") {
+  const countriesToShow = (searchInput) => {
+    if (searchInput === "") {
       return countries;
     } else {
       return countries.filter((country) =>
-        country.name.common.toLowerCase().startsWith(search.toLowerCase())
+        country.name.common.toLowerCase().includes(search.toLowerCase())
       );
     }
   };
@@ -38,11 +68,10 @@ function App() {
       <h1>Countries</h1>
       <div>
         Search: <input value={search} onChange={handleChange} />
-      </div>
-      <div>
-        {countriesToShow().map((country) => {
-          return <li key={country.name.common}>{country.name.common}</li>;
-        })}
+        <DisplayCountries
+          countriesToShow={() => countriesToShow(search)}
+          search={search}
+        />
       </div>
     </>
   );
