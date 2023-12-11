@@ -2,6 +2,33 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 
+const SingleCountry = ({ country }) => {
+  // console.log("languages: ", country.languages);
+  let languagesArr = Object.values(country.languages).map(function (value) {
+    return value;
+  });
+
+  // console.log(languagesArr);
+
+  const imgUrl = country.flags.png;
+
+  // console.log(imgUrl);
+
+  return (
+    <div>
+      <h1>{country.name.common}</h1>
+      <p>Capital: {country.capital[0]}</p>
+      <p>Area: {country.area}</p>
+      <h3>Languages: </h3>
+      {languagesArr.map((language) => {
+        return <li key={language}>{language}</li>;
+      })}
+
+      <img src={imgUrl} style={{ marginTop: 10 }} />
+    </div>
+  );
+};
+
 const DisplayCountries = ({ countriesToShow, search }) => {
   console.log("countriesToShow: ", countriesToShow());
 
@@ -20,6 +47,8 @@ const DisplayCountries = ({ countriesToShow, search }) => {
           <p>Too many matches, try a more specific search</p>
         </div>
       );
+    } else if (countriesToShow(search).length == 1) {
+      return <SingleCountry country={countriesToShow(search)[0]} />;
     }
 
     return (
