@@ -86,10 +86,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (search === "") {
-      setCountry(null);
-    }
+    setCountry(null);
   }, [search]);
+
   if (!countries) {
     return null;
   }
