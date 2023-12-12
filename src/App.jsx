@@ -85,6 +85,11 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    if (search === "") {
+      setCountry(null);
+    }
+  }, [search]);
   if (!countries) {
     return null;
   }
