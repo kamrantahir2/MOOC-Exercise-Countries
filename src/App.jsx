@@ -4,6 +4,10 @@ import axios from "axios";
 
 const SingleCountry = ({ country }) => {
   // console.log("languages: ", country.languages);
+  if (!country) {
+    return null;
+  }
+
   let languagesArr = Object.values(country.languages).map(function (value) {
     return value;
   });
@@ -29,7 +33,7 @@ const SingleCountry = ({ country }) => {
   );
 };
 
-const DisplayCountries = ({ countriesToShow, search }) => {
+const DisplayCountries = ({ countriesToShow, search, handleClick }) => {
   console.log("countriesToShow: ", countriesToShow());
 
   if (search === "") {
@@ -54,7 +58,13 @@ const DisplayCountries = ({ countriesToShow, search }) => {
     return (
       <div>
         {countriesToShow().map((country) => {
-          return <li key={country.name.common}>{country.name.common}</li>;
+          return (
+            <li key={country.name.common}>
+              {country.name.common}
+
+              <button onClick={() => handleClick(country)}>Show</button>
+            </li>
+          );
         })}
       </div>
     );
@@ -64,6 +74,7 @@ const DisplayCountries = ({ countriesToShow, search }) => {
 function App() {
   const [countries, setCountries] = useState(null);
   const [search, setSearch] = useState("");
+  const [country, setCountry] = useState(null);
 
   useEffect(() => {
     axios
@@ -88,6 +99,10 @@ function App() {
     }
   };
 
+  const handleClick = (country) => {
+    setCountry(country);
+  };
+
   const handleChange = (event) => {
     setSearch(event.target.value);
   };
@@ -100,7 +115,9 @@ function App() {
         <DisplayCountries
           countriesToShow={() => countriesToShow(search)}
           search={search}
+          handleClick={handleClick}
         />
+        <SingleCountry country={country} />
       </div>
     </>
   );
